@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/primevue/resources/themes/lara-light-green/theme.css" />
+    <link href="https://unpkg.com/primeicons/primeicons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/primevue/core/core.min.js"></script>    
+    <script src="https://unpkg.com/primevue/datatable/datatable.min.js"></script>
+    <script src="https://unpkg.com/primevue/column/column.min.js"></script>
+    <script src="https://unpkg.com/primevue/toast/toast.min.js"></script>
+    <script src="https://unpkg.com/primevue/toastservice/toastservice.min.js"></script>
+    <script src="https://unpkg.com/primevue/panel/panel.min.js"></script>    
+    <script src="https://unpkg.com/primevue/confirmdialog/confirmdialog.min.js"></script>
+    <script src="https://unpkg.com/primevue/confirmationservice/confirmationservice.min.js"></script>
+    <script src="https://unpkg.com/primevue/inputnumber/inputnumber.min.js"></script>
+    <script src="https://unpkg.com/primevue/selectbutton/selectbutton.min.js"></script>
+    <script src="https://unpkg.com/primevue/card/card.min.js"></script>
+    <title>Gerenciador Financeiro</title>
+</head>
+
+<body>
+
+    <div id="app">
+        <p-confirmdialog></p-confirmdialog>
+        <p-toast position="top-right"></p-toast>
+        <p-panel header="Gerenciador Financeiro">
+            Gerencie suas finanças. Desenvolvido com VueJS e PrimeVue            
+        </p-panel>
+        <div class="cards">
+            <p-card>
+                <template #title>Receitas</template>
+                <template #content>
+                    <p class="m-0">R$ {{ receitas }}</p>
+                </template>
+            </p-card>
+            <p-card>
+                <template #title>Despesas</template>
+                <template #content>
+                    <p class="m-0">R$ {{ despesas }}</p>
+                </template>
+            </p-card>
+            <p-card>
+                <template #title>Total</template>
+                <template #content>
+                    <p class="m-0">R$ {{ total }}</p>
+                </template>
+            </p-card>
+            <p-button label="Registro" class="new-button" @click="showNew = true" icon="pi pi-plus-circle"></p-button>
+        </div>          
+        <p-datatable :value="financas">
+            <template #header>
+                <div>Finanças</div>
+            </template>
+            <p-column field="valor" header="Valor (R$)"></p-column>
+            <p-column field="tipo" header="Tipo"></p-column>
+            <p-column field="descricao" header="Descrição"></p-column>
+            <p-column field="id" header="Editar">
+                <template #body="slotProps">
+                    <p-button icon="pi pi-file-edit" severity="info" rounded raised @click="edit(slotProps.data.id)" />                    
+                </template>
+            </p-column>
+            <p-column field="id" header="Deletar">
+                <template #body="slotProps">
+                    <p-button icon="pi pi-trash" severity="danger" rounded raised @click="deleteRow(slotProps.data.id)" />
+                </template>
+            </p-column>
+            <template #footer> Total de registros: {{ financas ? financas.length : 0 }} </template>
+        </p-datatable>
+        <p-dialog v-model:visible="showNew" modal header="Novo registro" :style="{ width: '25rem' }">
+            <span>Registre as informações da finança</span>
+            <div>
+                <p-inputnumber v-model="valor" mode="currency" currency="BRL" locale="pt-BR" :minFractionDigits="2" placeholder="Valor" />
+            </div>
+            <div>
+                <p-selectbutton v-model="tipo" :options="tipos" aria-labelledby="basic" />
+            </div>
+            <div>
+                <p-inputtext v-model="descricao" autocomplete="off" placeholder="Descrição" @change="descricao=descricao.toUpperCase()" />
+            </div>
+            <div>
+                <p-button type="button" label="Cancelar" severity="secondary" @click="clearNewFields" icon="pi pi-stop-circle"></p-button>
+                <p-button type="button" label="Salvar" @click="save" icon="pi pi-save"></p-button>
+            </div>          
+            <div>
+                <p-message severity="error" v-if="hasErrors">Preencha todos os campos</p-message>
+            </div>
+        </p-dialog>
+        <p-dialog v-model:visible="showEdit" modal header="Editar Registro" :style="{ width: '25rem' }">
+            <span>Edite as informações da finança</span>
+            <div>
+                <p-inputnumber v-model="valor_edit" mode="currency" currency="BRL" locale="pt-BR" :minFractionDigits="2" placeholder="Valor" />
+            </div>
+            <div>
+                <p-selectbutton v-model="tipo_edit" :options="tipos" aria-labelledby="basic" />
+            </div>
+            <div>
+                <p-inputtext v-model="descricao_edit" autocomplete="off" placeholder="Descrição" @change="descricao_edit=descricao_edit.toUpperCase()" />
+            </div>
+            <div>
+                <p-button type="button" label="Cancelar" severity="secondary" @click="clearEditFields" icon="pi pi-stop-circle"></p-button>
+                <p-button type="button" label="Editar" @click="update" icon="pi pi-file-edit"></p-button>
+            </div>
+            <div>
+                <p-message severity="error" v-if="hasEditErrors">Preencha todos os campos</p-message>
+            </div>
+        </p-dialog>
+    </div>
+
+    <script src="app.js"></script>
+
+</body>
+
+</html>
