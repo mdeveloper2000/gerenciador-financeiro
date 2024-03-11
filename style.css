@@ -1,0 +1,42 @@
+body {
+    background-color: var(--green-800);
+}
+
+#app {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.p-dialog .p-inputtext {
+    margin-top: 10px;
+    margin-bottom: 10px; 
+}
+
+.p-button {
+    margin-right: 15px;
+    margin-top: 10px;
+}
+
+.p-dialog .p-inputtext {
+    width: 100%;
+}
+
+.p-datatable {
+    margin-bottom: 100px;
+}
+
+.cards {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.p-card {
+    min-width: 250px;    
+}
+
+.p-selectbutton {
+    margin-top: 0;
+}
